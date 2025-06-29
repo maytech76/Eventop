@@ -30,9 +30,14 @@ class Guest extends Model
             'email_sent'
         ];
         
-        public function event()
-        {
+        public function event(){
+
             return $this->belongsTo(Event::class);
+        }
+
+        public function partners(){
+
+            return $this->hasMany(Partner::class);
         }
     
    }

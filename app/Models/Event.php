@@ -24,6 +24,10 @@ class Event extends Model
         'start_time', 
         'end_time', 
         'limit_guest',
+        'limit_partners',
+        'certificate_template',
+        'has_certificate',
+        'type',
         'status',
         'rooms', 
         
@@ -43,6 +47,8 @@ class Event extends Model
         
         return $this->hasMany(Guest::class);
     }
+
+    
 
     public function getStatusClassAttribute(){
 
