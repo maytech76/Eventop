@@ -50,6 +50,7 @@ class GuestController extends Controller
         
     }
 
+
     /* Listado de invitados de un evento */
     public function eventGuests(Event $event){
 
@@ -70,14 +71,17 @@ class GuestController extends Controller
     
     public function store(Request $request){
 
+
+         //Validación de datos
         $validated = $request->validate([
+
             'event_id' => 'required|exists:events,id',
             'name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:guests,email,NULL,id,event_id,'.$request->event_id,
         ]);
 
-        // Crear invitado con datos básicos
+         // Crear invitado con datos básicos
         $guest = Guest::create([
 
             'event_id' => $validated['event_id'],
@@ -97,6 +101,7 @@ class GuestController extends Controller
        
 
     }
+
 
 
     private function sendInvitationEmail($guest){
@@ -267,10 +272,13 @@ class GuestController extends Controller
         }
     }
 
+
+
     public function thankYou(){
 
         return view('guests.thank_you');
     }
+
 
 
     public function verifyGuest(Request $request){
@@ -294,6 +302,7 @@ class GuestController extends Controller
 
         return response()->json(['status' => 'ok']);
     }
+
 
     //CheckIn de Invitados
 
@@ -362,6 +371,7 @@ class GuestController extends Controller
             }
     }
 
+    
    
     public function edit(string $id){
                 
@@ -394,6 +404,8 @@ class GuestController extends Controller
                 ], 500);
             }
     }
+
+
 
     public function update(Request $request, string $id){
 

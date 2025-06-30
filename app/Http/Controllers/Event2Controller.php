@@ -2,56 +2,45 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
-use App\Models\Event;
-use App\Models\User;
 use Illuminate\Http\Request;
-
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\View;
+use App\Models\Event;
+use App\Models\Event2;
+use App\Models\Partner;
+use App\Models\Category;
+use App\Models\User;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\View;
 
 
 /* Librerias PhpMailer */
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-use Illuminate\Support\Carbon;
-
-use App\Mail\EventInvitationMail;
-use Illuminate\Support\Facades\Mail;
-
-
-
-
-
-class EventController extends Controller{
-    
-    
-
+class Event2Controller extends Controller
+{
+   
     public function index(){
 
         // Obtener solo usuarios con rol_id = 2 (organizer)
         $users = User::where('rol_id', 2)->get();
         $categories = Category::all(); //optenemos todas las categorias*/
-        $events= Event::all();
+        $events= Event::where('type', 'grupo')->get();
 
-        return view('events.index', compact('events', 'users', 'categories'));
-        
+        return view('events2.index', compact('events', 'users', 'categories'));
     }
 
-    
+   
     public function create(){
 
         // Obtener solo usuarios con rol_id = 2 (organizer)
         $users = User::where('rol_id', 2)->get();
-        $categories = Category::all(); //optenemos todas las categorias*/
+        $categories = Category::where('type', 'grupo'); //optenemos todas las categorias de type grupos*/
        
 
-        return view('events.create', compact('users', 'categories'));
+        return view('events2.create', compact('users', 'categories'));
     }
 
- 
+   
     public function store(Request $request){
 
         // Validación de los datos recibidos
@@ -67,10 +56,12 @@ class EventController extends Controller{
             'start_time' => 'required',
             'end_time' => 'required',
             'limit_guest' => 'required',
+            'limit_partners' => 'required',
+            'type'=> 'required',
             'rooms' => 'required',
             
         ]);
-
+        
 
         // Creación de la reserva post a validacion
         $event =Event::create([
@@ -85,39 +76,27 @@ class EventController extends Controller{
             'start_time' => $request->start_time,
             'end_time' => $request->end_time,
             'limit_guest'=>$request->limit_guest,
+            'limit_partners'=>$request->limit_partners,
+            'type'=>$request->type,
             'rooms'=>$request->rooms,
             
 
         ]);
 
-        $this->sendEmail($event);
+            $this->sendEmail($event); 
 
-        /*  dd($event->toarray());  */
+         /*  dd($event->toarray());  */
 
-        return redirect()->route('events.index')->with('success', 'Evento Creado Correctamente');
+        return redirect()->route('events2.index')->with('success', 'Evento Creado Correctamente');
     }
 
     
-    public function show(string $id){
-
-        // Buscar el evento con relaciones (usuario y categoría)
-        $event = Event::with(['user', 'category'])
-        ->findOrFail($id);
-
-        // Contar invitados (asumiendo relación 'guests')
-        $guestsCount = $event->guests()->count();
-
-        return view('events.show', compact('event', 'guestsCount'));
+    public function show(string $id)
+    {
+        //
     }
 
-    public function showDetails(Event $event){
-
-        $guestsCount = $event->guests()->count();
-        
-        return view('events.partials.details-modal', compact('event', 'guestsCount'))->render();
-    }
-
-    
+  
     public function edit(string $id){
 
         try {
@@ -146,8 +125,8 @@ class EventController extends Controller{
     public function update(Request $request, string $id){
 
         try {
-            \Illuminate\Support\Facades\Log::info('Iniciando actualización del evento ' . $id);
-            \Illuminate\Support\Facades\Log::info('Datos recibidos:', $request->all());
+            Log::info('Iniciando actualización del evento ' . $id);
+            Log::info('Datos recibidos:', $request->all());
 
             // Validación de los datos recibidos
             $request->validate([
@@ -168,7 +147,7 @@ class EventController extends Controller{
 
             // Buscar el evento a actualizar
             $event = Event::findOrFail($id);
-            \Illuminate\Support\Facades\Log::info('Evento encontrado:', $event->toArray());
+            Log::info('Evento encontrado:', $event->toArray());
 
             // Actualizar los datos del evento
             $event->update([
@@ -182,27 +161,28 @@ class EventController extends Controller{
                 'start_time' => $request->start_time,
                 'end_time' => $request->end_time,
                 'limit_guest' => $request->limit_guest,
+                'limit_partners' => $request->limit_partners,
                 'status' => $request->status,
                 'rooms' => $request->rooms,
             ]);
 
-            \Illuminate\Support\Facades\Log::info('Evento actualizado correctamente');
+             Log::info('Evento actualizado correctamente');
 
             return response()->json([
                 'success' => true
             ]);
 
-            return redirect()->route('events.index')->with('success', 'Evento Editado Correctamente');
+            return redirect()->route('events2.index')->with('success', 'Evento Editado Correctamente');
 
         } catch (\Illuminate\Validation\ValidationException $e) {
-            \Illuminate\Support\Facades\Log::error('Error de validación:', $e->errors());
+                  Log::error('Error de validación:', $e->errors());
             return response()->json([
                 'success' => false,
                 'message' => 'Error de validación',
                 'errors' => $e->errors()
             ], 422);
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Error al actualizar evento: ' . $e->getMessage());
+            Log::error('Error al actualizar evento: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Error al actualizar el evento: ' . $e->getMessage()
@@ -226,8 +206,8 @@ class EventController extends Controller{
         }
     }
 
-    // Método para enviar el correo de confirmación de la reserva
-    public function sendEmail($event){
+     // Método para enviar el correo de confirmación de la reserva
+     public function sendEmail($event){
 
         $user = User::find($event->user_id);
         $category = Category::find($event->category_id);
@@ -265,6 +245,7 @@ class EventController extends Controller{
                 'start_time' => $event->start_time,
                 'end_time' => $event->end_time,
                 'limit_guest'=>$event->limit_guest,
+                'limit_partners'=>$event->limit_partners,
                 'rooms'=>$event->rooms,
 
             ])->render();
@@ -280,22 +261,5 @@ class EventController extends Controller{
             Log::error('Error al enviar el correo: '. $mail->ErrorInfo);
             return back()->with('error','Error al enviar el correo :' . $mail->ErrorInfo);
         }
-    }
-
-    public function sendMassInvitations(Event $event){
-        
-        $guests = $event->guests()->where('email_sent', false)->get();
-
-        foreach ($guests as $guest) {
-            try {
-                Mail::to($guest->email)->send(new EventInvitationMail($guest, $event));
-                $guest->update(['email_sent' => true]);
-                Log::info("Invitación enviada a: {$guest->email}");
-            } catch (\Exception $e) {
-                Log::error("Error al enviar a {$guest->email}: " . $e->getMessage());
-            }
-        }
-
-        return back()->with('success', 'Invitaciones enviadas a invitados pendientes.');
     }
 }

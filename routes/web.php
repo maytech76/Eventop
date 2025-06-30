@@ -3,6 +3,7 @@
 use App\Exports\ProductsExport;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Dashboard;
+use App\Http\Controllers\Event2Controller; // Eventos para grupos
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\RolController;
 use App\Http\Controllers\UserController;
@@ -10,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use Maatwebsite\Excel\Exporter;
 
-use App\Http\Controllers\EventController;
+use App\Http\Controllers\EventController; // Eventos para usuario UNICO
 use App\Http\Controllers\Guest\ExportImportController;
 use App\Http\Controllers\GuestController;
 
@@ -68,7 +69,6 @@ Route::get('/storage/qr_codes/{filename}', function ($filename) {
 Route::get('/guests/event/{event}/guests', [GuestController::class, 'guestsEvent'])->name('events.guests');
 
 // Rutas para confirmación pública
-
 Route::get('/confirmar-invitacion/{event}', [GuestController::class, 'showConfirmationForm'])->name('guest.confirmation.form'); // Nombre de ruta actualizado
 
 Route::post('/confirmar-invitacion/{event}', [GuestController::class, 'processConfirmation'])->name('guest.confirmation.store');
@@ -77,8 +77,10 @@ Route::post('/confirmar-invitacion/{event}', [GuestController::class, 'processCo
 //Vista de Agradecimiento por confirmar su asistencia al evento
 Route::get('/gracias/{event}', [GuestController::class, 'thankYou'])->name('guest.thankYou');
 
+
 // Ruta para cuando el invitado ya haya confirmado su asistencia
 Route::get('/ya-confirmado/{event}', [GuestController::class, 'alreadyConfirmed'])->name('guest.already_confirmed');
+
 
 Route::get('/api/verify-guest', [GuestController::class, 'verifyGuest']);
 
@@ -92,6 +94,7 @@ Route::post('/check-in/process', [GuestController::class, 'processCheckIn'])->na
 //Ruta para escanear el QR
 Route::view('/scanner', 'scanner')->name('scanner');
 
+
 /* Rutas para el modulo Productos y Dropzone */
 Route::get('products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/{product}/images', [ProductController::class, 'getImages']);
@@ -102,7 +105,6 @@ Route::put('products/{id}', [ProductController::class, 'update'])->name('product
 Route::delete('products/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
 Route::post('/products', [ProductController::class, 'store'])->name('products.store');
 Route::post('/products/upload', [ProductController::class, 'uploadImage'])->name('products.upload');
-
 Route::get('products/export/', [ProductsExport::class, 'productsexport'])->name('products.export');
 
 
@@ -165,7 +167,6 @@ Route::get('/test-time', function() {
     ];
 });
 
-
 /* ------ FINAL RUTAS CLIENTES ------- */
 
 
@@ -198,8 +199,14 @@ Route::middleware([
         Route::get('/admin/ajust-stock', AdjustStock::class)->name('admin.stock');
 
         Route::get('admin/products/images', ProductImages::class)->name('admin.products.images');
+        
+        /* Ruta para eventos por invitado UNICO */
+        Route::resource('events', EventController::class); 
 
-        Route::resource('events', EventController::class);
+         /* Ruta para eventos guest + partnes GRUPAL */
+        /* Route::resource('events2', Event2Controller::class); */
+        Route::get('events2',[Event2Controller::class, 'index'])->name('events2.index' );
+        Route::post('events2', [Event2Controller::class, 'store'])->name('events2.store');
 
         Route::get('categories', [CategoryController::class, 'index'])->name('categories.index');
         Route::post('categories/store', [CategoryController::class, 'store'])->name('categories.store');
@@ -208,7 +215,7 @@ Route::middleware([
         Route::delete('categories/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 
        
-
+        /* List Guest for Events */
         Route::get('/guests/event/{event}/guests', [GuestController::class, 'guestsEvent'])->name('events.guests');
 
         Route::get('/events/{event}/details', [EventController::class, 'showDetails'])->name('events.details');
@@ -222,7 +229,7 @@ Route::middleware([
 
         /* ----------------------------------------------- */
 
-         Route::resource('guests', GuestController::class); 
+        Route::resource('guests', GuestController::class); 
 
         Route::get('/events/event/{event}/guests', [GuestController::class, 'eventGuests'])->name('events.guests');
 

@@ -38,67 +38,69 @@
                     <!-- row -->
                     <div class="row row-sm">
 
+                        {{-- Privados Unico --}}
                         <div class="col-xl-3 col-lg-6 col-md-6 col-xm-12">
-                            <div class="card overflow-hidden sales-card bg-primary-gradient">
-                                <div class="px-3 pt-3  pb-2 pt-0">
+                            <a href="{{ route('events.index') }}">
+                              <div class="card overflow-hidden sales-card bg-primary-gradient">
+                                 <div class="px-3 pt-3  pb-2 pt-0">
                                     <div class="">
-                                        <h6 class="mb-3 tx-12 text-white">Total de Usuarios</h6>
+                                        <h6 class="mb-3 tx-12 text-white">PRIVADOS</h6>
                                     </div>
                                     <div class="pb-0 mt-0">
                                         <div class="d-flex">
                                             <div class="">
-                                                <h4 class="tx-20 fw-bold mb-1 text-white">200</h4>
-                                                <p class="mb-0 tx-12 text-white op-7">Modulo de Usuario</p>
+                                                <h5 class="tx-20 fw-bold mb-1 text-white">Exclusivos</h5>
+                                                <p class="mb-0 tx-12 text-white op-7">por Invitado</p>
                                             </div>
                                             <span class="float-end my-auto ms-auto">
-                                                <i class="fas fa-arrow-circle-up text-white"></i>
-                                                <span class="text-white op-7"> +427</span>
+                                                <i class="fa fa-user text-white"></i>
                                             </span>
                                         </div>
                                     </div>
-                                </div>
-                                
-                            </div>
+                                  </div>                      
+                                </div> 
+                            </a>
                         </div>
 
+                        {{-- Eventos Grupales --}}
                         <div class="col-xl-3 col-lg-6 col-md-6 col-xm-12">
-                            <div class="card overflow-hidden sales-card bg-danger-gradient">
+                            <a href="{{ route('events2.index') }}">
+                              <div class="card overflow-hidden sales-card bg-danger-gradient">
                                 <div class="px-3 pt-3  pb-2 pt-0">
                                     <div class="">
-                                        <h6 class="mb-3 tx-12 text-white">Total Reservas</h6>
+                                        <h6 class="mb-3 tx-12 text-white">PERSONALES</h6>
                                     </div>
                                     <div class="pb-0 mt-0">
                                         <div class="d-flex">
                                             <div class="">
-                                                <h4 class="tx-20 fw-bold mb-1 text-white">150</h4>
-                                                <p class="mb-0 tx-12 text-white op-7">Ir a Modulo Reservas</p>
+                                                <h5 class="tx-20 fw-bold mb-1 text-white">Grupo Social</h5>
+                                                <p class="mb-0 tx-12 text-white op-7">Invitación por Grupo</p>
                                             </div>
                                             <span class="float-end my-auto ms-auto">
-                                                <i class="fas fa-arrow-circle-down text-white"></i>
-                                                <span class="text-white op-7"> -23.09%</span>
+                                                <i class="fa fa-sitemap text-white"></i>
                                             </span>
                                         </div>
                                     </div>
-                                </div>
-                            
-                            </div>
+                                 </div>     
+                              </div>
+                            </a>
                         </div>
 
+                        {{-- Eventos Certificados --}}
                         <div class="col-xl-3 col-lg-6 col-md-6 col-xm-12">
                             <div class="card overflow-hidden sales-card bg-success-gradient">
                                 <div class="px-3 pt-3  pb-2 pt-0">
                                     <div class="">
-                                        <h6 class="mb-3 tx-12 text-white">TOTAL EARNINGS</h6>
+                                        <h6 class="mb-3 tx-12 text-white">PROFESIONALES</h6>
                                     </div>
                                     <div class="pb-0 mt-0">
                                         <div class="d-flex">
                                             <div class="">
-                                                <h4 class="tx-20 fw-bold mb-1 text-white">$7,125.70</h4>
-                                                <p class="mb-0 tx-12 text-white op-7">Compared to last week</p>
+                                                <h4 class="tx-20 fw-bold mb-1 text-white">Certificados</h4>
+                                                <p class="mb-0 tx-12 text-white op-7">Profesionales & Academicos </p>
                                             </div>
                                             <span class="float-end my-auto ms-auto">
-                                                <i class="fas fa-arrow-circle-up text-white"></i>
-                                                <span class="text-white op-7"> 52.09%</span>
+                                                <i class="far fa-address-card text-white"></i>
                                             </span>
                                         </div>
                                     </div>
@@ -107,21 +109,23 @@
                             </div>
                         </div>
 
+                        {{-- Eventos Deportivos --}}
                         <div class="col-xl-3 col-lg-6 col-md-6 col-xm-12">
                             <div class="card overflow-hidden sales-card bg-warning-gradient">
                                 <div class="px-3 pt-3  pb-2 pt-0">
                                     <div class="">
-                                        <h6 class="mb-3 tx-12 text-white">PRODUCT SOLD</h6>
+                                        <h6 class="mb-3 tx-12 text-white">ATLETAS</h6>
                                     </div>
                                     <div class="pb-0 mt-0">
                                         <div class="d-flex">
                                             <div class="">
-                                                <h4 class="tx-20 fw-bold mb-1 text-white">$4,820.50</h4>
-                                                <p class="mb-0 tx-12 text-white op-7">Compared to last week</p>
+                                                <h4 class="tx-20 fw-bold mb-1 text-white">Competencias</h4>
+                                                <p class="mb-0 tx-12 text-white op-7">Deporte & Recreación</p>
                                             </div>
                                             <span class="float-end my-auto ms-auto">
-                                                <i class="fas fa-arrow-circle-down text-white"></i>
-                                                <span class="text-white op-7"> -152.3</span>
+                                                <i class="fa fa-trophy text-white"></i>
+                                              
+                                                {{-- <span class="text-white op-7"> -152.3</span> --}}
                                             </span>
                                         </div>
                                     </div>

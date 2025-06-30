@@ -10,8 +10,9 @@ return new class extends Migration
     public function up(): void{
 
         Schema::create('partners', function (Blueprint $table) {
+
             $table->id();
-            $table->foreignId('guest_id')->constrained('guest')->onDelete('cascade');
+            $table->foreignId('guest_id')->constrained('guests')->onDelete('cascade');
             $table->string('name', 50);
             $table->time('checkin_time');// se debe actualizar con el mismo tiempo del invitado
             $table->enum('status',  ['checkin', 'guest'])->default('guest');

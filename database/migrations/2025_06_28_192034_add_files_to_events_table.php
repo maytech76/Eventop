@@ -6,29 +6,29 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+   
     public function up(): void
     {
         Schema::table('events', function (Blueprint $table) {
 
-            $table->string('limit_partners')->after('limit_guest')->nullable();
-            $table->enum('type', ['grupo', 'unico'])->after('limit_partners')->nullable();
+            $table->integer('limit_partners')->after('limit_guest')->nullable();
+            $table->enum('type', ['unico', 'grupo', 'profesional', 'deportes'])->after('limit_partners')->nullable();
             $table->string('certificate_template', 100)->after('type')->nullable();
-            $table->boolean('has_certificate')->after('certificate_template')->default('false');
+            $table->boolean('has_certificate')->after('certificate_template')->default(false);
 
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
+    
     public function down(): void
     {
         Schema::table('events', function (Blueprint $table) {
-            
-            $table->dropIfExists('limit_partners');
+            $table->dropColumn([
+                'limit_partners',
+                'type',
+                'certificate_template',
+                'has_certificate'
+            ]);
         });
     }
 };

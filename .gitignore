@@ -4,6 +4,7 @@
 /public/hot
 /public/documentpro.txt
 /public/storage
+/database
 /storage/*.key
 /vendor
 .env
